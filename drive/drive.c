@@ -1,7 +1,7 @@
 #include "drive.h"
 #include <math.h>
 
-void drive_off(){
+void drive_off() {
 	off(MOT_RIGHT);
 	off(MOT_LEFT);
 }
@@ -12,6 +12,14 @@ void clear_all_drive(){
 void drive(int mL,int mR){
 	motor(MOT_LEFT,mL);
 	motor(MOT_RIGHT,mR);
+}
+
+long CMtoBEMF(float cm) {
+ 	return (long)(cm * 1100. / (PI * wheeldiameter));
+}
+
+float BEMFtoCM(long ticks) {
+ 	return (float)(ticks * (PI * wheeldiameter) / 1100.);
 }
 
 /* \fn void right(int degrees, int radius)
@@ -118,64 +126,58 @@ int turnlspeed;
     msleep(30l);
 }
 
-void multforward(float distance, float speedmult){//go forward a number of CM    NOT    backEMF counts
-	if(distance < 0l){
-		distance = -distance;
-	}
-	long newdist;
-	newdist = distance*CMtoBEMF;//conversion ratio
-	long l = gmpc(MOT_LEFT)+newdist;
-	long r = gmpc(MOT_RIGHT)+newdist;
-	motor(MOT_LEFT,SPDl*speedmult);
-	motor(MOT_RIGHT,SPDr*speedmult);
-	while(gmpc(MOT_LEFT) < l && gmpc(MOT_RIGHT) < r){
-		if (gmpc(MOT_LEFT) >= l)
+void forward(float distance) {
+	if(distance < 0.){
+		backward(-distance);
+      	return;
+    }
+
+  	// Calculate the # of ticks the robot must move for each wheel
+	long ticks = CMtoBEMF(distance);
+	long totalLeftTicks = get_motor_position_counter(MOT_LEFT) + ticks;
+	long totalRightTicks = get_motor_position_counter(MOT_RIGHT) + ticks;
+
+  	// Start motors
+	motor(MOT_LEFT, SPDl);
+	motor(MOT_RIGHT, SPDr);
+
+  	// Keep moving until both motors reach their desired # of ticks
+	while(get_motor_position_counter(MOT_LEFT) < totalLeftTicks
+          && get_motor_position_counter(MOT_RIGHT) < totalRightTicks) {
+		if (get_motor_position_counter(MOT_LEFT) >= totalLeftTicks)
 			off(MOT_LEFT);
-		if (gmpc(MOT_RIGHT) >= r)
+		if (get_motor_position_counter(MOT_RIGHT) >= totalRightTicks)
 			off(MOT_RIGHT);
 	}
-	drive_off();
+
+	off(MOT_LEFT);
+  	off(MOT_RIGHT);
 }
 
-void forward(float distance){//go forward a number of CM    NOT    backEMF counts
-	if(distance < 0l){
-		distance = -distance;
-	}
-	long newdist;
-	newdist = distance*CMtoBEMF;//conversion ratio
-	long l = gmpc(MOT_LEFT)+newdist;
-	long r = gmpc(MOT_RIGHT)+newdist;
-	motor(MOT_LEFT,SPDl);
-	motor(MOT_RIGHT,SPDr);
-	while(gmpc(MOT_LEFT) < l && gmpc(MOT_RIGHT) < r){
-		if (gmpc(MOT_LEFT) >= l)
+void backward(float distance){
+	if(distance < 0.){
+		forward(-distance);
+      	return;
+    }
+
+  	// Calculate the # of ticks the robot must move for each wheel
+	long ticks = CMtoBEMF(distance);
+	long totalLeftTicks = get_motor_position_counter(MOT_LEFT) - ticks;
+	long totalRightTicks = get_motor_position_counter(MOT_RIGHT) - ticks;
+
+  	// Start motors
+	motor(MOT_LEFT, -SPDl);
+	motor(MOT_RIGHT, -SPDr);
+
+  	// Keep moving until both motors reach their desired # of ticks
+	while(get_motor_position_counter(MOT_LEFT) > totalLeftTicks
+          && get_motor_position_counter(MOT_RIGHT) > totalRightTicks) {
+		if (get_motor_position_counter(MOT_LEFT) <= totalLeftTicks)
 			off(MOT_LEFT);
-		if (gmpc(MOT_RIGHT) >= r)
+		if (get_motor_position_counter(MOT_RIGHT) <= totalRightTicks)
 			off(MOT_RIGHT);
 	}
-	drive_off();
 
-	/*mrp(MOT_RIGHT,SPDrb,newdist*rdistmultb);
-	mrp(MOT_LEFT,SPDlb,newdist);
-	bmd(MOT_RIGHT);
-	bmd(MOT_LEFT);*/
-}
-
-void backward(float distance){//go backward a number of CM    NOT    backEMF counts
-	if(distance < 0l){
-		distance = -distance;
-	}
-	long newdist;
-	newdist = distance*CMtoBEMF;
-	long l = gmpc(MOT_LEFT)-newdist;
-	long r = gmpc(MOT_RIGHT)-newdist;
-	motor(MOT_LEFT,-SPDlb);
-	motor(MOT_RIGHT,-SPDrb);
-	while(gmpc(MOT_LEFT) > l && gmpc(MOT_RIGHT) > r){
-		if (gmpc(MOT_LEFT) <= l)
-			off(MOT_LEFT);
-		if (gmpc(MOT_RIGHT) <= r)
-			off(MOT_RIGHT);
-	}
-	drive_off();
+	off(MOT_LEFT);
+  	off(MOT_RIGHT);
 }
