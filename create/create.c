@@ -56,7 +56,7 @@ void create_left(int angle, float radius, int speed) {
   	// [137][speed high][speed low][radius high][radius low]
     create_write_byte(137);
     create_write_int(speed);
-    if(radius == 0) {
+    if(radius == 0)
         create_write_int(1);
     else
         create_write_int(radiusTicks);
@@ -68,102 +68,102 @@ void create_left(int angle, float radius, int speed) {
 }
 
 void create_right(int angle, float radius, int speed) {
-  	if(radius < 0.)
-      	return;
-  	if (speed < -500 || speed > 500)
-      	return;
+    if(radius < 0.)
+        return;
+    if (speed < -500 || speed > 500)
+        return;
 
-  	if(angle < 0.) {
-     	create_left(-angle, radius, speed);
-      	return;
+    if(angle < 0.) {
+        create_left(-angle, radius, speed);
+        return;
     }
 
-  	long radiusTicks = CMtoCTICK(radius);
+    long radiusTicks = CMtoCTICK(radius);
 
-  	clear_create_angle();
+    clear_create_angle();
 
-  	// create turn byte (decimal): 137
-  	// [137][speed high][speed low][radius high][radius low]
-  	create_write_byte(137);
-  	create_write_int(speed);
+    // create turn byte (decimal): 137
+    // [137][speed high][speed low][radius high][radius low]
+    create_write_byte(137);
+    create_write_int(speed);
 
-  	if(radius == 0)
-      	create_write_int(-1);
+    if(radius == 0)
+        create_write_int(-1);
     else
-     	create_write_int(-radiusTicks);
+        create_write_int(-radiusTicks);
 
-    while(get_create_total_angle() > -angle) {
-     	 msleep(10);
-    }
+    while(get_create_total_angle() > -angle)
+        msleep(10);
 
-  	create_stop();
+    create_stop();
 }
 
 void create_forward(float dist, int speed) {
-  	if(speed < -500 || speed > 500)
+    if(speed < -500 || speed > 500)
         return;
 
- 	if(dist < 0.) {
-      	create_backward(-dist, speed);
+    if(dist < 0.) {
+        create_backward(-dist, speed);
         return;
     }
 
-  	clear_create_distance();
-  	long ticks = CMtoCTICK(dist);
+    clear_create_distance();
+    long ticks = CMtoCTICK(dist);
 
-  	create_drive_direct(speed, speed);
+    create_drive_direct(speed, speed);
 
-  	while(get_create_distance() < ticks)
-      	msleep(10);
+    while(get_create_distance() < ticks)
+        msleep(10);
 
-  	create_stop();
+    create_stop();
 }
 
 void create_backward(float dist, int speed) {
-  	if(speed < -500 || speed > 500) return;
+    if(speed < -500 || speed > 500)
+        return;
 
- 	if(dist < 0.) {
-      	create_forward(-dist, speed);
+    if(dist < 0.) {
+        create_forward(-dist, speed);
         return;
     }
 
-  	clear_create_distance();
-  	long ticks = CMtoCTICK(-dist);
+    clear_create_distance();
+    long ticks = CMtoCTICK(-dist);
 
-  	create_drive_direct(-speed, -speed);
+    create_drive_direct(-speed, -speed);
 
-  	while(get_create_distance() > ticks)
-      	msleep(10);
+    while(get_create_distance() > ticks)
+        msleep(10);
 
-  	create_stop();
+    create_stop();
 }
 
 // Sensor Integrations
 
 void create_forward_until_bump(int speed) {
- 	create_drive_direct(speed, speed);
+    create_drive_direct(speed, speed);
 
-  	while(get_create_lbump() == 0 && get_create_rbump() == 0)
-     	msleep(10);
+    while(get_create_lbump() == 0 && get_create_rbump() == 0)
+        msleep(10);
 
-  	create_stop();
+    create_stop();
 }
 
 // Misc. Functions -- UNTESTED
 
 void create_send() {
-	create_write_byte(142); // Sensor input
-	create_write_byte(35);	// 35 : OI Mode
+    create_write_byte(142); // Sensor input
+    create_write_byte(35);	// 35 : OI Mode
 }
 
 void create_receive() {
-	char buffer[1];
-	char *bptr = buffer;
-	create_read_block(bptr, 1);
+    char buffer[1];
+    char *bptr = buffer;
+    create_read_block(bptr, 1);
 }
 
 void create_block() {
- 	create_stop();
-  	create_send();
-  	create_receive();
+    create_stop();
+    create_send();
+    create_receive();
 }
