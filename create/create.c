@@ -7,11 +7,11 @@
 // Clearing Create measured values (distance traveled & angle turned)
 
 void clear_create_distance() {
- 	set_create_distance(0);
+    set_create_distance(0);
 }
 
 void clear_create_angle() {
- 	set_create_total_angle(0);
+    set_create_total_angle(0);
 }
 
 // iRobot2 Open Interface : https://www.adafruit.com/datasheets/create_2_Open_Interface_Spec.pdf
@@ -21,50 +21,50 @@ void clear_create_angle() {
 
 void create_write_int(int value) {
   	// [high byte][low byte]
- 	create_write_byte(get_high_byte(value));
-  	create_write_byte(get_low_byte(value));
+    create_write_byte(get_high_byte(value));
+    create_write_byte(get_low_byte(value));
 }
 
 // Helper Conversions (converting "create ticks" to centimeters)
 
 float CTICKtoCM(long tick) {
- 	return (float)(tick / CTICK_PER_CM);
+    return (float)(tick / CTICK_PER_CM);
 }
 
 long CMtoCTICK(float cm) {
-  	return (long)(cm * CTICK_PER_CM);
+    return (long)(cm * CTICK_PER_CM);
 }
 
 // Create General Movement
 
 void create_left(int angle, float radius, int speed) {
-  	if(radius < 0.)
-      	return;
-  	if (speed < -500 || speed > 500)
-      	return;
+    if(radius < 0.)
+        return;
+    if (speed < -500 || speed > 500)
+        return;
 
-  	if(angle < 0.) {
-     	create_right(-angle, radius, speed);
-      	return;
+    if(angle < 0.) {
+        create_right(-angle, radius, speed);
+        return;
     }
 
-  	long radiusTicks = CMtoCTICK(radius);
+    long radiusTicks = CMtoCTICK(radius);
 
-  	clear_create_angle();
+    clear_create_angle();
 
   	// create turn byte (decimal): 137
   	// [137][speed high][speed low][radius high][radius low]
-  	create_write_byte(137);
-  	create_write_int(speed);
-  	if(radius == 0) {
-      	create_write_int(1);
+    create_write_byte(137);
+    create_write_int(speed);
+    if(radius == 0) {
+        create_write_int(1);
     else
-     	create_write_int(radiusTicks);
+        create_write_int(radiusTicks);
 
-  	while(get_create_total_angle() < angle)
-     	 msleep(10);
+    while(get_create_total_angle() < angle)
+        msleep(10);
 
-  	create_stop();
+    create_stop();
 }
 
 void create_right(int angle, float radius, int speed) {
@@ -86,13 +86,13 @@ void create_right(int angle, float radius, int speed) {
   	// [137][speed high][speed low][radius high][radius low]
   	create_write_byte(137);
   	create_write_int(speed);
-    
+
   	if(radius == 0)
       	create_write_int(-1);
     else
      	create_write_int(-radiusTicks);
 
-  	while(get_create_total_angle() > -angle) {
+    while(get_create_total_angle() > -angle) {
      	 msleep(10);
     }
 
