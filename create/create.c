@@ -58,13 +58,11 @@ void create_left(int angle, float radius, int speed) {
   	create_write_int(speed);
   	if(radius == 0) {
       	create_write_int(1);
-    } else {
+    else
      	create_write_int(radiusTicks);
-    }
 
-  	while(get_create_total_angle() < angle) {
+  	while(get_create_total_angle() < angle)
      	 msleep(10);
-    }
 
   	create_stop();
 }
@@ -88,11 +86,11 @@ void create_right(int angle, float radius, int speed) {
   	// [137][speed high][speed low][radius high][radius low]
   	create_write_byte(137);
   	create_write_int(speed);
-  	if(radius == 0) {
+    
+  	if(radius == 0)
       	create_write_int(-1);
-    } else {
+    else
      	create_write_int(-radiusTicks);
-    }
 
   	while(get_create_total_angle() > -angle) {
      	 msleep(10);
@@ -102,10 +100,12 @@ void create_right(int angle, float radius, int speed) {
 }
 
 void create_forward(float dist, int speed) {
-  	if(speed < -500 || speed > 500) return;
+  	if(speed < -500 || speed > 500)
+        return;
 
  	if(dist < 0.) {
       	create_backward(-dist, speed);
+        return;
     }
 
   	clear_create_distance();
@@ -113,9 +113,8 @@ void create_forward(float dist, int speed) {
 
   	create_drive_direct(speed, speed);
 
-  	while(get_create_distance() < ticks) {
+  	while(get_create_distance() < ticks)
       	msleep(10);
-    }
 
   	create_stop();
 }
@@ -125,6 +124,7 @@ void create_backward(float dist, int speed) {
 
  	if(dist < 0.) {
       	create_forward(-dist, speed);
+        return;
     }
 
   	clear_create_distance();
@@ -132,9 +132,8 @@ void create_backward(float dist, int speed) {
 
   	create_drive_direct(-speed, -speed);
 
-  	while(get_create_distance() > ticks) {
+  	while(get_create_distance() > ticks)
       	msleep(10);
-    }
 
   	create_stop();
 }
@@ -144,9 +143,8 @@ void create_backward(float dist, int speed) {
 void create_forward_until_bump(int speed) {
  	create_drive_direct(speed, speed);
 
-  	while(get_create_lbump() == 0 && get_create_rbump() == 0) {
+  	while(get_create_lbump() == 0 && get_create_rbump() == 0)
      	msleep(10);
-    }
 
   	create_stop();
 }

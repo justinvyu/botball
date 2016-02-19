@@ -79,12 +79,13 @@ void right(float degrees, float radius){
  * \param degrees degrees forward to go
  * \param radius radius at which to turn around
  */
-void left(float degrees, float radius){
+void left(float degrees, float radius) {
 int turnlspeed;
 	long turnl=((2*radius-ks)*CMtoBEMF*PI)*(degrees/360.);
 	long turnr=((2*radius+ks)*CMtoBEMF*PI)*(degrees/360.);
-    if(turnr == 0l) return;
-    turnlspeed = round((float)turnl/(float)turnr*SPD);
+    if(turnr == 0l)
+		return;
+    turnlspeed = round((float)turnl / (float)turnr*SPD);
     msleep(30l);
     if(turnr > 0l)
       motor(MOT_RIGHT, SPD);
@@ -99,24 +100,26 @@ int turnlspeed;
     turnl += gmpc(MOT_LEFT);
     if(turnl - gmpc(MOT_LEFT) > 0l){
         if(turnr - gmpc(MOT_RIGHT) > 0l){
-            while((turnl > gmpc(MOT_LEFT) && turnlspeed != 0) || turnr > gmpc(MOT_RIGHT)){
-                if(turnl < gmpc(MOT_LEFT) - 10l) off(MOT_LEFT);
-                if(turnr < gmpc(MOT_RIGHT) - 10l) off(MOT_RIGHT);
+            while((turnl > gmpc(MOT_LEFT) && turnlspeed != 0) || turnr > gmpc(MOT_RIGHT)) {
+                if(turnl < gmpc(MOT_LEFT) - 10l)
+					off(MOT_LEFT);
+                if(turnr < gmpc(MOT_RIGHT) - 10l)
+					off(MOT_RIGHT);
             }
         }else{
-            while((turnl > gmpc(MOT_LEFT) && turnlspeed != 0) || turnr < gmpc(MOT_RIGHT)){
+            while((turnl > gmpc(MOT_LEFT) && turnlspeed != 0) || turnr < gmpc(MOT_RIGHT)) {
                 if(turnl < gmpc(MOT_LEFT) - 10l) off(MOT_LEFT);
                 if(turnr > gmpc(MOT_RIGHT) + 10l) off(MOT_RIGHT);
             }
         }
     }else{
-        if(turnr - gmpc(MOT_RIGHT) > 0l){
-            while((turnl < gmpc(MOT_LEFT) && turnlspeed != 0) || turnr > gmpc(MOT_RIGHT)){
+        if(turnr - gmpc(MOT_RIGHT) > 0l) {
+            while((turnl < gmpc(MOT_LEFT) && turnlspeed != 0) || turnr > gmpc(MOT_RIGHT)) {
                 if(turnl > gmpc(MOT_LEFT) + 10l) off(MOT_LEFT);
                 if(turnr < gmpc(MOT_RIGHT) - 10l) off(MOT_RIGHT);
             }
-        }else{
-            while((turnl < gmpc(MOT_LEFT) && turnlspeed != 0) || turnr < gmpc(MOT_RIGHT)){
+        } else {
+            while((turnl < gmpc(MOT_LEFT) && turnlspeed != 0) || turnr < gmpc(MOT_RIGHT)) {
                 if(turnl > gmpc(MOT_LEFT) + 10l) off(MOT_LEFT);
                 if(turnr > gmpc(MOT_RIGHT) + 10l) off(MOT_RIGHT);
             }
@@ -155,7 +158,7 @@ void forward(float distance) {
 }
 
 void backward(float distance){
-	if(distance < 0.){
+	if(distance < 0.) {
 		forward(-distance);
       	return;
     }
