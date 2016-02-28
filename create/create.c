@@ -25,7 +25,7 @@ void clear_create_angle() {
 #define get_low_byte(byte) (byte & 255)
 
 void create_write_int(int value) {
-  	// [high byte][low byte]
+    // [high byte][low byte]
     create_write_byte(get_high_byte(value));
     create_write_byte(get_low_byte(value));
 }
@@ -57,8 +57,8 @@ void create_left(int angle, float radius, int speed) {
 
     clear_create_angle();
 
-  	// create turn byte (decimal): 137
-  	// [137][speed high][speed low][radius high][radius low]
+    // create turn byte (decimal): 137
+    // [137][speed high][speed low][radius high][radius low]
     create_write_byte(137);
     create_write_int(speed);
     if(radius == 0)
@@ -158,7 +158,7 @@ void create_forward_until_bump(int speed) {
 
 void create_send() {
     create_write_byte(142); // Sensor input
-    create_write_byte(35);	// 35 : OI Mode
+    create_write_byte(35); // 35 : OI Mode
 }
 
 void create_receive() {

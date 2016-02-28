@@ -11,7 +11,7 @@ static void test() {
 }
 
 Scorpion new_scorpion() {
-	Scorpion instance = {
+    Scorpion instance = {
         // Assign instance properties
         .test = &test
     };
