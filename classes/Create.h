@@ -29,6 +29,10 @@ typedef struct Create {
     void (*write_byte)(char byte);
     void (*write_int)(int decimal);
 
+    void (*block)();
+    void (*send)();
+    void (*receive)();
+
     // misc
     int (*get_battery_charge)();
     void (*full)();
@@ -37,6 +41,8 @@ typedef struct Create {
 } Create;
 
 extern Create new_create(); // constructor
+
+Create create; // global create reference
 
 /*
 extern const struct CreateClass {
