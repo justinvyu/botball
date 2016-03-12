@@ -34,19 +34,16 @@ static void forward(float dist, int speed) {
         return;
     }
 
-    create.set_distance(0);
-    int ticks = dist * CTICK_PER_CM;
+    // t = d / r
+    float travel_time = (dist * 10) / (float)speed; // speed is in mm/sec
     create.drive_direct(speed, speed);
-
-    while(create.get_distance() < ticks) {
-        printf("distance: %d\n", create.get_distance());
-        msleep(50);
-    }
+    msleep(travel_time * 1000.); // convert to milliseconds
 
     create.block();
 }
 
 static void backward(float dist, int speed) {
+    // Make sure parameters are valid
     if(speed < -500 || speed > 500)
         return;
     if(dist < 0.) {
@@ -54,15 +51,10 @@ static void backward(float dist, int speed) {
         return;
     }
 
-	create.set_distance(0);
-    long ticks = -dist * CTICK_PER_CM;
-
+    // t = d / r
+    float travel_time = (dist * 10) / (float)speed; // speed is in mm/sec
     create.drive_direct(-speed, -speed);
-
-    while(create.get_distance() > ticks) {
-        printf("distance: %d\n", create.get_distance());
-        msleep(50);
-    }
+    msleep(travel_time * 1000.); // convert to milliseconds
 
     create.block();
 }
@@ -147,7 +139,7 @@ static void block() {
 }
 
 Create new_create() {
-	Create instance = {
+    Create instance = {
         // Assign method references
         .forward = &forward,
         .backward = &backward,

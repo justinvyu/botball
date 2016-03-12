@@ -12,11 +12,11 @@ static void left(int angle, float radius, int speed);
 static void right(int angle, float radius, int speed);
 
 long CMtoBEMF(float cm) {
- 	return (long)(cm * 1100. / (PI * controller->wheel_diameter));
+ 	return (long)(cm * 1100. / (M_PI * controller.wheel_diameter));
 }
 
 float BEMFtoCM(long ticks) {
- 	return (float)(ticks * (PI * controller->wheel_diameter) / 1100.);
+ 	return (float)(ticks * (M_PI * controller.wheel_diameter) / 1100.);
 }
 
 static void forward(float dist, int speed) {
@@ -27,24 +27,24 @@ static void forward(float dist, int speed) {
 
   	// Calculate the # of ticks the robot must move for each wheel
 	long ticks = CMtoBEMF(dist);
-	long totalLeftTicks = gmpc(controller->motor_left) + ticks;
-	long totalRightTicks = gmpc(controller->motor_right) + ticks;
+	long totalLeftTicks = gmpc(controller.motor_left) + ticks;
+	long totalRightTicks = gmpc(controller.motor_right) + ticks;
 
   	// Start motors
-	motor(controller->motor_left, speed);
-	motor(controller->motor_right, speed);
+	motor(controller.motor_left, speed);
+	motor(controller.motor_right, speed);
 
   	// Keep moving until both motors reach their desired # of ticks
-	while(gmpc(controller->motor_left) < totalLeftTicks
-          && gmpc(controller->motor_right) < totalRightTicks) {
-		if (gmpc(controller->motor_left) >= totalLeftTicks)
-			off(controller->motor_left);
-		if (gmpc(controller->motor_right) >= totalRightTicks)
-			off(controller->motor_right);
+	while(gmpc(controller.motor_left) < totalLeftTicks
+          && gmpc(controller.motor_right) < totalRightTicks) {
+		if (gmpc(controller.motor_left) >= totalLeftTicks)
+			off(controller.motor_left);
+		if (gmpc(controller.motor_right) >= totalRightTicks)
+			off(controller.motor_right);
 	}
 
-	off(controller->motor_left);
-  	off(controller->motor_right);
+	off(controller.motor_left);
+  	off(controller.motor_right);
 }
 
 static void backward(float dist, int speed) {
@@ -55,157 +55,184 @@ static void backward(float dist, int speed) {
 
   	// Calculate the # of ticks the robot must move for each wheel
 	long ticks = CMtoBEMF(dist);
-	long totalLeftTicks = gmpc(controller->motor_left) - ticks;
-	long totalRightTicks = gmpc(controller->motor_right) - ticks;
+	long totalLeftTicks = gmpc(controller.motor_left) - ticks;
+	long totalRightTicks = gmpc(controller.motor_right) - ticks;
 
   	// Start motors
-	motor(controller->motor_left, -speed);
-	motor(controller->motor_right, -speed);
+	motor(controller.motor_left, -speed);
+	motor(controller.motor_right, -speed);
 
   	// Keep moving until both motors reach their desired # of ticks
-	while(gmpc(controller->motor_left) > totalLeftTicks
-          && gmpc(controller->motor_right) > totalRightTicks) {
-		if (gmpc(controller->motor_left) <= totalLeftTicks)
-			off(controller->motor_left);
-		if (gmpc(controller->motor_right) <= totalRightTicks)
-			off(controller->motor_right);
+	while(gmpc(controller.motor_left) > totalLeftTicks
+          && gmpc(controller.motor_right) > totalRightTicks) {
+		if (gmpc(controller.motor_left) <= totalLeftTicks)
+			off(controller.motor_left);
+		if (gmpc(controller.motor_right) <= totalRightTicks)
+			off(controller.motor_right);
 	}
-    off(controller->motor_left);
-    off(controller->motor_right);
+    off(controller.motor_left);
+    off(controller.motor_right);
 }
+
+// FIX THESE
 
 static void left(int angle, float radius, int speed) {
     int turnlspeed;
-	long turnl = (CMtoBEMF(2 * (radius - controller->distance_between_wheels) * PI))*(angle/360.);
-	long turnr = (CMtoBEMF(2 * (radius + controller->distance_between_wheels) * PI))*(angle/360.);
-    if(turnr == 0l)
+	long turnl = (CMtoBEMF(2 * (radius - controller.distance_between_wheels) * M_PI)) * (angle / 360.);
+	long turnr = (CMtoBEMF(2 * (radius + controller.distance_between_wheels) * M_PI)) * (angle / 360.);
+    if(turnr == 0)
 		return;
-    turnlspeed = round((float)turnl / (float)turnr*speed);
-    msleep(30l);
-    if(turnr > 0l)
-      motor(controller->motor_right, speed);
+
+    turnlspeed = round((float)turnl / (float)turnr * speed);
+    msleep(30);
+
+    if(turnr > 0)
+      motor(controller.motor_right, speed);
     else
-      motor(controller->motor_right, -speed);
-    if(turnlspeed < 0) turnlspeed = -turnlspeed;
+      motor(controller.motor_right, -speed);
+
+    if(turnlspeed < 0)
+        turnlspeed = -turnlspeed;
 	if(turnl > 0l)
-	  motor(controller->motor_left, turnlspeed);
+	   motor(controller.motor_left, turnlspeed);
 	else
-	  motor(controller->motor_left, -turnlspeed);
-    turnr += gmpc(controller->motor_right);
-    turnl += gmpc(controller->motor_left);
-    if(turnl - gmpc(controller->motor_left) > 0l) {
-        if(turnr - gmpc(controller->motor_right) > 0l){
-            while((turnl > gmpc(controller->motor_left) && turnlspeed != 0) || turnr > gmpc(controller->motor_right)) {
-                if(turnl < gmpc(controller->motor_left) - 10l)
-					off(controller->motor_left);
-                if(turnr < gmpc(controller->motor_right) - 10l)
-					off(controller->motor_right);
+	   motor(controller.motor_left, -turnlspeed);
+
+    turnr += gmpc(controller.motor_right);
+    turnl += gmpc(controller.motor_left);
+
+    if(turnl - gmpc(controller.motor_left) > 0l) {
+        if(turnr - gmpc(controller.motor_right) > 0l){
+            while((turnl > gmpc(controller.motor_left) && turnlspeed != 0) || turnr > gmpc(controller.motor_right)) {
+                if(turnl < gmpc(controller.motor_left) - 10)
+					off(controller.motor_left);
+                if(turnr < gmpc(controller.motor_right) - 10)
+					off(controller.motor_right);
             }
         } else {
-            while((turnl > gmpc(controller->motor_left) && turnlspeed != 0) || turnr < gmpc(controller->motor_right)) {
-                if(turnl < gmpc(controller->motor_left) - 10l) off(controller->motor_left);
-                if(turnr > gmpc(controller->motor_right) + 10l) off(controller->motor_right);
+            while((turnl > gmpc(controller.motor_left) && turnlspeed != 0) || turnr < gmpc(controller.motor_right)) {
+                if(turnl < gmpc(controller.motor_left) - 10)
+                    off(controller.motor_left);
+                if(turnr > gmpc(controller.motor_right) + 10)
+                    off(controller.motor_right);
             }
         }
     } else {
-        if(turnr - gmpc(controller->motor_right) > 0l) {
-            while((turnl < gmpc(controller->motor_left) && turnlspeed != 0) || turnr > gmpc(controller->motor_right)) {
-                if(turnl > gmpc(controller->motor_left) + 10l) off(controller->motor_left);
-                if(turnr < gmpc(controller->motor_right) - 10l) off(controller->motor_right);
+        if(turnr - gmpc(controller.motor_right) > 0) {
+            while((turnl < gmpc(controller.motor_left) && turnlspeed != 0) || turnr > gmpc(controller.motor_right)) {
+                if(turnl > gmpc(controller.motor_left) + 10)
+                    off(controller.motor_left);
+                if(turnr < gmpc(controller.motor_right) - 10)
+                    off(controller.motor_right);
             }
         } else {
-            while((turnl < gmpc(controller->motor_left) && turnlspeed != 0) || turnr < gmpc(controller->motor_right)) {
-                if(turnl > gmpc(controller->motor_left) + 10l) off(controller->motor_left);
-                if(turnr > gmpc(controller->motor_right) + 10l) off(controller->motor_right);
+            while((turnl < gmpc(controller.motor_left) && turnlspeed != 0) || turnr < gmpc(controller.motor_right)) {
+                if(turnl > gmpc(controller.motor_left) + 10)
+                    off(controller.motor_left);
+                if(turnr > gmpc(controller.motor_right) + 10)
+                    off(controller.motor_right);
             }
         }
     }
-    off(controller->motor_left);
-    off(controller->motor_right);
-    msleep(30l);
+    off(controller.motor_left);
+    off(controller.motor_right);
+    msleep(30);
 }
 
 static void right(int angle, float radius, int speed) {
 	int turnrspeed;
-	long turnl = (CMtoBEMF(2 * (radius + controller->distance_between_wheels) * PI))*(angle/360.);
-	long turnr = (CMtoBEMF(2 * (radius - controller->distance_between_wheels) * PI))*(angle/360.);
-    if(turnl == 0l) return;
-    turnrspeed = round((float)turnr/(float)turnl*speed);
-    msleep(30l);
-    if(turnl > 0l)
-      	motor(controller->motor_left, speed);
+	long turnl = (CMtoBEMF(2 * (radius + controller.distance_between_wheels) * M_PI)) * (angle / 360.);
+	long turnr = (CMtoBEMF(2 * (radius - controller.distance_between_wheels) * M_PI)) * (angle / 360.);
+    if(turnl == 0)
+        return;
+
+    turnrspeed = round((float)turnr / (float)turnl * speed);
+    msleep(30);
+
+    if(turnl > 0)
+      	motor(controller.motor_left, speed);
     else
-      	motor(controller->motor_left, -speed);
-    if(turnrspeed < 0) turnrspeed = -turnrspeed;
-	if(turnr > 0l)
-		motor(controller->motor_right, turnrspeed);
+      	motor(controller.motor_left, -speed);
+
+    if(turnrspeed < 0)
+        turnrspeed = -turnrspeed;
+	if(turnr > 0)
+		motor(controller.motor_right, turnrspeed);
 	else
-		motor(controller->motor_right, -turnrspeed);
-    turnl += gmpc(controller->motor_left);
-    turnr += gmpc(controller->motor_right);
-    if(turnr - gmpc(controller->motor_right) > 0l){
-        if(turnl - gmpc(controller->motor_left) > 0l){
-            while((turnr > gmpc(controller->motor_right) && turnrspeed != 0) || turnl > gmpc(controller->motor_left)){
-                if(turnr < gmpc(controller->motor_right) - 10l) off(controller->motor_right);
-                if(turnl < gmpc(controller->motor_left) - 10l) off(controller->motor_left);
+		motor(controller.motor_right, -turnrspeed);
+
+    turnl += gmpc(controller.motor_left);
+    turnr += gmpc(controller.motor_right);
+
+    if(turnr - gmpc(controller.motor_right) > 0){
+        if(turnl - gmpc(controller.motor_left) > 0){
+            while((turnr > gmpc(controller.motor_right) && turnrspeed != 0) || turnl > gmpc(controller.motor_left)) {
+                if(turnr < gmpc(controller.motor_right) - 10)
+                    off(controller.motor_right);
+                if(turnl < gmpc(controller.motor_left) - 10)
+                    off(controller.motor_left);
             }
         } else {
-            while((turnr > gmpc(controller->motor_right) && turnrspeed != 0) || turnl < gmpc(controller->motor_left)){
-                if(turnr < gmpc(controller->motor_right) - 10l) off(controller->motor_right);
-                if(turnl > gmpc(controller->motor_left) + 10l) off(controller->motor_left);
+            while((turnr > gmpc(controller.motor_right) && turnrspeed != 0) || turnl < gmpc(controller.motor_left)) {
+                if(turnr < gmpc(controller.motor_right) - 10)
+                    off(controller.motor_right);
+                if(turnl > gmpc(controller.motor_left) + 10)
+                    off(controller.motor_left);
         	}
         }
     } else {
-        if(turnl - gmpc(controller->motor_left) > 0l) {
-            while((turnr < gmpc(controller->motor_right) && turnrspeed != 0) || turnl > gmpc(controller->motor_left)){
-                if(turnr > gmpc(controller->motor_right) + 10l) off(controller->motor_right);
-                if(turnl < gmpc(controller->motor_left) - 10l) off(controller->motor_left);
+        if(turnl - gmpc(controller.motor_left) > 0l) {
+            while((turnr < gmpc(controller.motor_right) && turnrspeed != 0) || turnl > gmpc(controller.motor_left)) {
+                if(turnr > gmpc(controller.motor_right) + 10)
+                    off(controller.motor_right);
+                if(turnl < gmpc(controller.motor_left) - 10)
+                    off(controller.motor_left);
             }
         } else {
-            while((turnr < gmpc(controller->motor_right) && turnrspeed != 0) || turnl < gmpc(controller->motor_left)){
-                if(turnr > gmpc(controller->motor_right) + 10l) off(controller->motor_right);
-                if(turnl > gmpc(controller->motor_left) + 10l) off(controller->motor_left);
+            while((turnr < gmpc(controller.motor_right) && turnrspeed != 0) || turnl < gmpc(controller.motor_left)) {
+                if(turnr > gmpc(controller.motor_right) + 10)
+                    off(controller.motor_right);
+                if(turnl > gmpc(controller.motor_left) + 10)
+                    off(controller.motor_left);
             }
         }
     }
-    off(controller->motor_right);
-	off(controller->motor_left);
-    msleep(30l);
+    off(controller.motor_right);
+	off(controller.motor_left);
+    msleep(30);
 }
 
 static void slow_servo(int port, int position, float time) {
     float increment = .01;
-	float curr, start = get_servo_position(port);
-	float i = ((position-start)/time)*increment;
+	float curr, start = controller.get_servo_position(port);
+	float i = ((position - start) / time) * increment;
 	curr = start;
 	if (start > position)
 	{
 		while(curr > position)
 		{
-			//printf("%f\n",curr);
-			set_servo_position(port, curr);
-			curr+=i;
-			msleep((long)(increment*1000));
+			controller.servo(port, curr);
+			curr += i;
+			msleep((long)(increment * 1000));
 		}
 	}
 	else if (start < position)
 	{
 		while(curr < position)
 		{
-			//printf("%f\n",curr);
-			set_servo_position(port,curr);
-			curr+=i;
-			msleep((long)(increment*1000));
+			controller.servo(port, curr);
+			curr += i;
+			msleep((long)(increment * 1000));
 		}
 	}
-	set_servo_position(port,position);
+	controller.servo(port, position);
 }
 
 static int set_motor_left(int port) {
     if(port < 0 || port > 3) {
         return 0;
     }
-    controller->motor_left = port;
+    controller.motor_left = port;
     return 1;
 }
 
@@ -213,7 +240,7 @@ static int set_motor_right(int port) {
     if(port < 0 || port > 3) {
         return 0;
     }
-    controller->motor_right = port;
+    controller.motor_right = port;
     return 1;
 }
 
@@ -244,21 +271,24 @@ Controller new_controller(int motor_left, int motor_right,
         .gmpc = &gmpc, .cmpc = &cmpc,
         .enable_servo = &enable_servo,
         .disable_servo = &disable_servo,
+        .enable_servos = &enable_servos,
+        .disable_servos = &disable_servos,
         .get_servo_position = &get_servo_position,
-        .set_servo_position = &set_servo_position,
+        .servo = &set_servo_position,
         .slow_servo = &slow_servo,
         .digital = &digital,
         .analog = &analog, .analog8 = &analog8,
         .analog10 = &analog10, .analog_et = &analog_et
     };
 
-    // instance variables (with setters)
-    if(controller->set_motor_left(motor_left) == 0)
-        controller->motor_left = 0;
-    if(controller->set_motor_right(motor_right) == 0)
-        controller->motor_right = 0;
-
     controller = &instance;
+
+    // instance variables (with setters)
+    if(controller.set_motor_left(motor_left) == 0)
+        controller.motor_left = 0;
+    if(controller.set_motor_right(motor_right) == 0)
+        controller.motor_right = 0;
+
     return instance;
 }
 
@@ -274,8 +304,10 @@ Controller new_create_controller() {
         .gmpc = &gmpc, .cmpc = &cmpc,
         .enable_servo = &enable_servo,
         .disable_servo = &disable_servo,
+        .enable_servos = &enable_servos,
+        .disable_servos = &disable_servos,
         .get_servo_position = &get_servo_position,
-        .set_servo_position = &set_servo_position,
+        .servo = &set_servo_position,
         .slow_servo = &slow_servo,
         .digital = &digital,
         .analog = &analog, .analog8 = &analog8,
