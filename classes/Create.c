@@ -166,19 +166,3 @@ Create new_create() {
     create = instance;
     return instance;
 }
-
-/*
-static struct Create new() {
-	return (struct Create) {
-        .forward = &forward,
-        .backward = &backward,
-        .left = &left,
-        .right = &right
-    };
-}
-
-const struct CreateClass Create = {
-    .new = &new,
-    .write_int = &create_write_int
-};
-*/
