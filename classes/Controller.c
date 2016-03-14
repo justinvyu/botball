@@ -25,10 +25,10 @@ static void forward(float dist, int speed) {
       	return;
     }
 
-  	// Calculate the # of ticks the robot must move for each wheel
-	long ticks = CMtoBEMF(dist);
-	long totalLeftTicks = gmpc(controller.motor_left) + ticks;
-	long totalRightTicks = gmpc(controller.motor_right) + ticks;
+  	// Calculate the # of ticks (distance) the robot must move
+	int ticks = CMtoBEMF(dist);
+	int totalLeftTicks = gmpc(controller.motor_left) + ticks;
+	int totalRightTicks = gmpc(controller.motor_right) + ticks;
 
   	// Start motors
 	motor(controller.motor_left, speed);
@@ -281,7 +281,7 @@ Controller new_controller(int motor_left, int motor_right,
         .analog10 = &analog10, .analog_et = &analog_et
     };
 
-    controller = &instance;
+    controller = instance; // set the global controller variable
 
     // instance variables (with setters)
     if(controller.set_motor_left(motor_left) == 0)
@@ -313,6 +313,6 @@ Controller new_create_controller() {
         .analog = &analog, .analog8 = &analog8,
         .analog10 = &analog10, .analog_et = &analog_et
     };
-    controller = &instance;
+    controller = instance;
     return instance;
 }

@@ -40,7 +40,7 @@ typedef struct Controller {
     void (*enable_servos)();
     void (*disable_servos)();
     int (*get_servo_position)(int port);
-    void (*servo)(int port, int position); // aka set_servo_position
+    void (*servo)(int port, int position);
     void (*slow_servo)(int port, int position, float time);
 
     // digital sensors
@@ -57,6 +57,6 @@ typedef struct Controller {
 // constructor
 extern Controller new_controller(int motor_left, int motor_right,
                            int distance_between_wheels, int wheel_diameter);
-extern Controller new_create_controller(); // alternate constructor for create
+extern Controller new_create_controller(); // alternate constructor
 
 Controller controller; // global wallaby instance

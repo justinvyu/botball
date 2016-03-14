@@ -22,22 +22,22 @@ static void shake() {
 
 static void lower_arm() {
     scorpion.controller.servo(ARM_SERVO, ARM_DOWN);
-    msleep(200);
+    msleep(500);
 }
 
 static void raise_arm() {
     scorpion.controller.servo(ARM_SERVO, ARM_UP);
-    msleep(200);
+    msleep(500);
 }
 
 static void open_claw() {
     scorpion.controller.servo(CLAW_SERVO, CLAW_OPEN);
-    msleep(200);
+    msleep(500);
 }
 
 static void close_claw() {
     scorpion.controller.servo(CLAW_SERVO, CLAW_CLOSED);
-    msleep(200);
+    msleep(500);
 }
 
 static void close_claw_slow(float time) {
@@ -46,12 +46,12 @@ static void close_claw_slow(float time) {
 
 static void set_claw_to_position(int position) {
     scorpion.controller.servo(CLAW_SERVO, position);
-    msleep(200);
+    msleep(500);
 }
 
 static void set_arm_to_position(int position) {
     scorpion.controller.servo(ARM_SERVO, position);
-    msleep(200);
+    msleep(500);
 }
 
 static void grab_tribbles() {
