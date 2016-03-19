@@ -30,8 +30,8 @@ float BEMFtoCM(long ticks) {
 }
 
 static void forward(float dist, int speed) {
-	if(dist < 0.){
-		backward(-dist, speed);
+    if(dist < 0.) {
+    	backward(-dist, speed);
       	return;
     }
 
@@ -58,9 +58,9 @@ static void forward(float dist, int speed) {
 }
 
 static void backward(float dist, int speed) {
-	if(dist < 0.) {
-		forward(-dist, speed);
-      	return;
+    if(dist < 0.) {
+        forward(-dist, speed);
+        return;
     }
 
   	// Calculate the # of ticks the robot must move for each wheel
@@ -95,7 +95,6 @@ static void left(int angle, float radius, int speed) {
         return;
 
     // calculate distance in CM
-    float left_distance = (left_radius * M_PI) * ((float)(angle) / 180.);
     float right_distance = (right_radius * M_PI) * ((float)(angle) / 180.);
 
     // calculate relative velocity
@@ -135,7 +134,6 @@ static void right(int angle, float radius, int speed) {
 
     // calculate distance in CM
     float left_distance = (left_radius * M_PI) * ((float)(angle) / 180.);
-    float right_distance = (right_radius * M_PI) * ((float)(angle) / 180.);
 
     // calculate relative velocity
 
@@ -208,8 +206,7 @@ static int set_motor_right(int port) {
 
 // Constructors
 
-Controller new_controller(int motor_left, int motor_right,
-                    float distance_between_wheels, float wheel_diameter) {
+Controller new_controller(int motor_left, int motor_right, float distance_between_wheels, float wheel_diameter) {
 	Controller instance = {
 
         // Instance Variables (with no setters)
@@ -273,8 +270,9 @@ Controller new_create_controller() {
         .servo = &set_servo_position,
         .slow_servo = &slow_servo,
         .digital = &digital,
-        .analog = &analog, .analog8 = &analog8,
-        .analog10 = &analog10, .analog_et = &analog_et
+        .analog = &analog,
+        .analog10 = &analog10,
+        .analog_et = &analog_et
     };
     controller = instance;
     return instance;
