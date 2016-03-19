@@ -11,10 +11,20 @@ static void backward(float dist, int speed);
 static void left(int angle, float radius, int speed);
 static void right(int angle, float radius, int speed);
 
+/**
+ * Converts from centimeters to BackEMF ticks (robot measurement).
+ * @param  cm a distance in centimeters that you want to convert
+ * @return    the parameter `cm` in BackEMF ticks
+ */
 long CMtoBEMF(float cm) {
  	return (long)(cm * 1150. / (M_PI * controller.wheel_diameter));
 }
 
+/**
+ * Converts from BackEMF ticks to centimeters.
+ * @param  ticks a distance in BackEMF ticks that you want to convert
+ * @return       the parameter `ticks` in centimeters
+ */
 float BEMFtoCM(long ticks) {
  	return (float)(ticks * (M_PI * controller.wheel_diameter) / 1100.);
 }
@@ -229,8 +239,9 @@ Controller new_controller(int motor_left, int motor_right,
         .servo = &set_servo_position,
         .slow_servo = &slow_servo,
         .digital = &digital,
-        .analog = &analog, .analog8 = &analog8,
-        .analog10 = &analog10, .analog_et = &analog_et
+        .analog = &analog,
+        .analog10 = &analog10,
+        .analog_et = &analog_et
     };
 
     controller = instance;
