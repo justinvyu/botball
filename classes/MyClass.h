@@ -1,16 +1,22 @@
 //
 //  MyClass.h
-//  Source written by Justin Yu
+//  Source written by someone
 //
 
 #include <kipr/botball.h>
+
+// Include the other class files
+
 #include "Controller.h"
+#include "Create.h"
+#include "Camera.h"
 
 // Define a "class" for your robot
 
 typedef struct MyClass {
     Controller controller; // refers to the wallaby controller
     Create create; // refers to your create
+    // Camera camera; // uncomment if you have a camera
 
     // Custom properties/instance methods
 
@@ -22,7 +28,7 @@ typedef struct MyClass {
 
 } MyClass;
 
-extern MyClass new_myclass(int a_property); // constructor
+extern MyClass new_robot(int a_property); // constructor
 
 // Global robot object
-MyClass my_robot;
+MyClass robot;

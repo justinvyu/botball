@@ -4,21 +4,15 @@
 
 int main()
 {
-    // instantiate your robot object
-    my_robot = new_myclass(4); // pass in parameters into the constructor
+    // instantiate your global robot object
+    robot = new_robot(4);
 
-    my_robot.create.connect(); // access methods from the create
-                               // connect to the create
+    robot.create.connect();
+    robot.controller.motor(0, 80);
+    robot.an_instance_method();
+    printf("%d", robot.a_property);
 
-    my_robot.controller.motor(0, 80); // access methods from the controller
-                                      // move motor 0 at 80% speed
+    robot.create.disconnect();
 
-    my_robot.an_instance_method(); // call your custom methods
-
-    printf("%d", my_robot.a_property); // access custom properties of your robot
-                                       // this will print: 4
-
-    my_robot.create.disconnect();
-
-  	return 0;
+    return 0;
 }
