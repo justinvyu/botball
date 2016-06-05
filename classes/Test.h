@@ -18,7 +18,6 @@ typedef struct MyClass {
     void (*an_instance_method)();
 } MyClass;
 
-extern MyClass new_robot(int a_property); // constructor
+extern MyClass new_object(int a_property); // constructor
 
-// Global robot object
-MyClass robot;
+MyClass object;
