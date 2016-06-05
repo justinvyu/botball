@@ -17,6 +17,6 @@ typedef struct MyClass {
 
 } MyClass;
 
-extern MyClass new_object(int a_property); // constructor
+extern MyClass new_object(); // constructor
 
 MyClass object;
