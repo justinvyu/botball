@@ -10,11 +10,8 @@
 
 //primary driving code
 
-#define MOT_LEFT 3
-#define MOT_RIGHT 0
-
-#define PI 3.14159265358979
-
+#define MOTOR_LEFT 3
+#define MOTOR_RIGHT 0
 #define SPD 100 //turning
 #define SPDl 90. //left forward
 #define SPDr 90. //right forward
@@ -24,6 +21,10 @@
 #define rdistmultb (SPDrb/SPDlb)
 #define wheeldiameter 5.0
 #define ks 14.5 // Distance from one wheel to the other
+
+
+#define PI 3.14159265358979
+
 
 long CMtoBEMF(float cm);
 float BEMFtoCM(long ticks);
