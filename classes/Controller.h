@@ -190,7 +190,8 @@ typedef struct Controller {
  * @param  wheel_diameter          the diameter of either wheel
  * @return                         the Controller instance
  */
-extern Controller new_controller(int motor_left, int motor_right, float distance_between_wheels, float wheel_diameter);
+extern Controller new_controller(int motor_left, int motor_right, 
+                                float distance_between_wheels, float wheel_diameter);
 
 /**
  * ALTERNATE CONSTRUCTOR:
