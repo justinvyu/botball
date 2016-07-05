@@ -186,24 +186,6 @@ static void slow_servo(int port, int position, float time) {
 	controller.servo(port, position);
 }
 
-// Setters
-
-static int set_motor_left(int port) {
-    if(port < 0 || port > 3) {
-        return 0;
-    }
-    controller.motor_left = port;
-    return 1;
-}
-
-static int set_motor_right(int port) {
-    if(port < 0 || port > 3) {
-        return 0;
-    }
-    controller.motor_right = port;
-    return 1;
-}
-
 // Constructors
 
 Controller new_controller(int motor_left, int motor_right, float distance_between_wheels, float wheel_diameter) {
@@ -213,12 +195,10 @@ Controller new_controller(int motor_left, int motor_right, float distance_betwee
         .distance_between_wheels = distance_between_wheels,
         .wheel_diameter = wheel_diameter,
 
-        // Setters
-
-        .set_motor_left = &set_motor_left,
-        .set_motor_right = &set_motor_right,
-
         // Assign method references
+
+        .motor_left = motor_left,
+        .motor_right = motor_right,
         .forward = &forward, .backward = &backward,
         .left = &left, .right = &right,
         .motor = &motor,
@@ -242,12 +222,6 @@ Controller new_controller(int motor_left, int motor_right, float distance_betwee
     };
 
     controller = instance;
-
-    // instance variables (with setters)
-    if(controller.set_motor_left(motor_left) == 0)
-        controller.motor_left = 0;
-    if(controller.set_motor_right(motor_right) == 0)
-        controller.motor_right = 0;
 
     return instance;
 }
@@ -276,4 +250,3 @@ Controller new_create_controller() {
     };
     controller = instance;
     return instance;
-}

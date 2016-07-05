@@ -173,11 +173,6 @@ typedef struct Controller {
      */
     int (*analog_et)(int port);
 
-    // PROPERTY SETTERS
-
-    int (*set_motor_left)(int port); // returns 0 if it fails; 1 if it succeeds
-    int (*set_motor_right)(int port);
-
 } Controller;
 
 // constructor
