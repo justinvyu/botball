@@ -67,17 +67,14 @@ int main()
     while(1) {
         sensor_value = analog10(tophat);
 
-        error = sensor_value - offset;
-        integral = (7. / 8.) * integral + error;
-        derivative = error - last_error;
+        error = sensor_value - offset;               // P
+        integral = (7. / 8.) * integral + error;     // I
+        derivative = error - last_error;             // D
 
         turn = (int)(kp * error + ki * integral + kd * derivative);
-
-        mav(0, speed - turn); // left motor
-        mav(1, speed + turn); // right motor
-
+        mav(0, speed - turn); // power left motor
+        mav(1, speed + turn); // power right motor
         last_error = error;
-
         msleep(1);
     }
 
