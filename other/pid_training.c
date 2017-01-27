@@ -61,13 +61,14 @@ int main()
           ki = 0.1,   // integral constant
           kd = 8.2;   // derivative constant
 
+    int last_error = 0;
     int speed = 1000; // velocity of motors at error = 0
-    offset = (float)(low + high) / 2.; // average of the calibration readings
-
+    int threshold = 800;
+    
     while(1) {
         sensor_value = analog10(tophat);
 
-        error = sensor_value - offset;               // P
+        error = sensor_value - threshold;            // P
         integral = (7. / 8.) * integral + error;     // I
         derivative = error - last_error;             // D
 
