@@ -250,3 +250,4 @@ Controller new_create_controller() {
     };
     controller = instance;
     return instance;
+}
