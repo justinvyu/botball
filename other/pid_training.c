@@ -22,22 +22,26 @@ void line_follow(int distance_in_ticks) {
     float kp = 2.4,   // proportional constant
           ki = 0.1,   // integral constant
           kd = 8.2;   // derivative constant
+    
+    float integral_scalar = 7 / 8.;
 
     int last_error = 0;
     int speed = 1000;    // velocity of motors at error = 0
     int threshold = 800; // experimentally determined white/black threshold
     
-    clear_motor_position_counter(0);
-    while(get_motor_position_counter(0) < distance_in_ticks) {
+    clear_motor_position_counter(MOTOR_LEFT);
+    clear_motor_position_counter(MOTOR_RIGHT);
+    while(get_motor_position_counter(MOTOR_LEFT) < distance_in_ticks
+          && get_motor_position_counter(MOTOR_RIGHT) < distance_in_ticks) {
         sensor_value = analog10(tophat);
 
-        error = sensor_value - threshold;            // P
-        integral = (7. / 8.) * integral + error;     // I
-        derivative = error - last_error;             // D
+        error = sensor_value - threshold;                  // P
+        integral = integral_scalar * integral + error;     // I
+        derivative = error - last_error;                   // D
 
         turn = (int)(kp * error + ki * integral + kd * derivative);
-        mav(0, speed - turn); // power left motor
-        mav(1, speed + turn); // power right motor
+        mav(MOTOR_LEFT, speed - turn); // power left motor
+        mav(MOTOR_RIGHT, speed + turn); // power right motor
         last_error = error;
         msleep(1);
     }
